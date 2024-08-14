@@ -13,10 +13,10 @@ button {
 /* ######## */
 
 .container {
-    padding: 1rem;
     display:flex;
     flex-wrap: wrap;
-    width: 100vw;
+    width: 90vw;
+    padding: 0vh 5vw;
 }
 
 .info {
@@ -24,7 +24,7 @@ button {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 5rem;
+    height: 10vh;
     background-color: whitesmoke;
 }
 
