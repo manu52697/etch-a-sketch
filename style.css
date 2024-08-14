@@ -1,0 +1,48 @@
+/* resets */
+
+body, html{
+    padding: 0rem;
+    margin: 0rem;
+}
+
+button {
+    box-shadow: none;
+    border: none;
+}
+
+/* ######## */
+
+.container {
+    padding: 1rem;
+    display:flex;
+    flex-wrap: wrap;
+    width: 100vw;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 5rem;
+    background-color: whitesmoke;
+}
+
+
+.info button {
+    background-color: darkgray;
+    color: whitesmoke;
+    padding: 0.8rem 2rem;
+    font-size: medium;
+    font-weight: 500;
+    border-radius: 5px;
+}
+
+.cell {
+    background-color: white;
+    box-sizing: border-box;
+}
+
+.cell.used-cell {
+    background-color: darkgray;
+}
