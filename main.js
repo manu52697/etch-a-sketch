@@ -3,7 +3,7 @@ import {Validator, Rule} from "./lib/validator.js";
 
 // setup
 const inputValidator = new Validator(
-    'input is num, 0 < input < 100', [
+    'input is num, 0 < input < 100',
         new Rule(
             `isn't null`, (i) => i != null
         ),
@@ -11,16 +11,19 @@ const inputValidator = new Validator(
             'is number', (i) => typeof i == 'number'
         ),
         new Rule(
-            'is positive number', (i) => i > 0
+            'is positive number', (i) => i >= 0
         ),
         new Rule(
             `isn't bigger than 100`, (i) => i <= 100
-        ),
-    ]
+        )
 );
 
-const gridOptions = {
+const gridDefaults = {
     gridSize: 16,
+}
+
+const gridOptions = {
+    gridSize: gridDefaults.gridSize,
 }
 
 /* Render behaviour */
@@ -30,52 +33,73 @@ function display(options){
     if(container == null){
         return false;
     }
-    console.log('painting')
-    options.cellSize = 90/options.gridSize;
-    options.rowCount = Math.ceil((2/3) * options.gridSize);
+    // console.log('painting')
+    options.cellSize = 90 / options.gridSize;
+    // options.rowCount = Math.ceil((2/3) * options.gridSize);
+    options.rowCount = options.gridSize;
     container.replaceChildren(); // empty the container
     paintGrid(container, options) // render the new container
 }
 
 function paintGrid(grid, options){
-    /* 
-    function to fill the div.container element with n*n
-    divs.
-    container width is 100vw, height is 90vh
-    */
    for (let i=0; i < options.rowCount; i++){
-    for(let j=0; j < options.gridSize; j++){
-        const current = createDiv(options.cellSize);
-        current.textContent= `${i}, ${j}`
-        grid.append(current)
-    }
+        for(let j=0; j < options.gridSize; j++){
+            const current = createDiv(options.cellSize);
+            // current.textContent= `${i}, ${j}`;
+            grid.append(current)
+        }
    }
 }
 
 function createDiv(s){
     const div = document.createElement('div');
     div.className = 'cell'
-    div.style.width = `${s}vw`; // to fill the vw;
+    div.style.width = `${s}vh`; // to fill the vw;
+    div.style.minWidth = `$${s}vh;`
     div.style.aspectRatio = 1;
+    div.addEventListener(
+        'mouseenter', 
+        (ev) => paintCell(ev.target)
+    )
     return div;
 }
 
 
 function promptUser(){
     let usrInput = prompt(`How big must the new grid be?`);
-    if(!inputValidator.validate(usrInput)){
+    try {
+        usrInput = parseInt(usrInput);
+        if(!inputValidator.validate(usrInput)){
+            throw new Error();
+        }
+        // if 0, use default value
+        if(usrInput == 0) {
+            console.info('using default gridSize: ' + gridDefaults.gridSize);
+            usrInput = gridDefaults.gridSize;
+        }
+        display({gridSize: usrInput})
+    } catch (error) {
         console.error('Malformed input: ' + usrInput);
-        promptUser();
     }
-    display({gridSize: usrInput})
-
 }
 
+function paintCell(div){
+    div.classList.add('painted-cell');
+    // console.info('painting cell!');
+
+    // comment the timeout to have persistent color change
+    setTimeout((x) => {
+        div.classList.remove('painted-cell')
+    },
+    1000 * 1);
+}
+
+/* Main thing */
 display(gridOptions)
 
 /* Event listeners */
 
 const resetButton = document.getElementById('reset');
-resetButton.addEventListener(onclick, () => {
+resetButton.addEventListener("click", () => {
     promptUser();
-})
+});
